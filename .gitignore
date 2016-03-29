@@ -6,3 +6,6 @@ __init__.py
 corpus
 life
 egg.py
+draw_corpus
+target
+sigil.png
