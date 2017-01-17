@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import os
 import time
 import socket
@@ -91,23 +93,24 @@ class Bot:
         self.socket.send("JOIN {} \r\n".format(channel))
 
     def handleInput(self):
-        # OVERRIDE THIS FUNCTION
-        prefix, command, args = parsemsg(self.receiveBuffer)
+        if len(self.receiveBuffer) > 0:
+            # OVERRIDE THIS FUNCTION
+            prefix, command, args = parsemsg(self.receiveBuffer)
 
-        if command == "PRIVMSG":
-            channel = args[0]
+            if command == "PRIVMSG":
+                channel = args[0]
 
-            inputString = args[1]
-            inputString = inputString[:-2]
-            if self.nickName in inputString:
-                if self.scrying:
-                    self.sendMsg(channel, "Please wait, I am currently occupied with "+self.querent[1]+"'s target.")
-                else:
-                    self.scrying = True
-                    self.querent = (channel, prefix[:prefix.index("!")])
-                    with open("target", "w") as f:
-                        f.write(inputString)
-                    subprocess.call("./draw.sh")
+                inputString = args[1]
+                inputString = inputString[:-2]
+                if self.nickName in inputString:
+                    if self.scrying:
+                        self.sendMsg(channel, "Please wait, I am currently occupied with "+self.querent[1]+"'s target.")
+                    else:
+                        self.scrying = True
+                        self.querent = (channel, prefix[:prefix.index("!")])
+                        with open("target", "w") as f:
+                            f.write(inputString)
+                        subprocess.call("./draw.sh")
 
     def uploadsigil(self):
         if os.path.exists(self.sigilpath):
