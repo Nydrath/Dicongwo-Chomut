@@ -67,7 +67,14 @@ class Bot:
 
     def receive(self):
         self.receiveBuffer = ""
-        self.receiveBuffer=self.socket.recv(1024)
+        try:
+            self.receiveBuffer=self.socket.recv(1024)
+        except socket.error, e:
+            if e.args[0] != 11:
+                # We don't just have a "no data received" error
+                with open("errors", "w") as f:
+                    print(e, file=f)
+                sys.exit(1)
         temp=string.split(self.receiveBuffer, "\n")
         for line in temp:
             try:
@@ -117,6 +124,7 @@ bot = Bot()
 bot.connect()
 time.sleep(2)
 bot.join("#/div/ination")
+bot.socket.setblocking(False)
 while True:
     bot.receive()
     bot.handleInput()
