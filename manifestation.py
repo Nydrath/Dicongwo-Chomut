@@ -128,5 +128,13 @@ bot.socket.setblocking(False)
 while True:
     bot.receive()
     bot.handleInput()
+
+    try:
+        with open("life", "r") as f:
+            pass
+    except:
+        import sys
+        sys.exit(1)
+
     if bot.scrying:
         bot.uploadsigil()
